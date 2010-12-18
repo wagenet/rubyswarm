@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @client.user_id %>
+</p>
+
+<p>
+  <b>Useragent:</b>
+  <%= @client.useragent_id %>
+</p>
+
+<p>
+  <b>Os:</b>
+  <%= @client.os %>
+</p>
+
+<p>
+  <b>Useragent:</b>
+  <%= @client.useragent %>
+</p>
+
+<p>
+  <b>Ip:</b>
+  <%= @client.ip %>
+</p>
+
+
+<%= link_to 'Edit', edit_client_path(@client) %> |
+<%= link_to 'Back', clients_path %>

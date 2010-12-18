@@ -1,0 +1,50 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @useragent.name %>
+</p>
+
+<p>
+  <b>Engine:</b>
+  <%= @useragent.engine %>
+</p>
+
+<p>
+  <b>Version:</b>
+  <%= @useragent.version %>
+</p>
+
+<p>
+  <b>Active:</b>
+  <%= @useragent.active %>
+</p>
+
+<p>
+  <b>Current:</b>
+  <%= @useragent.current %>
+</p>
+
+<p>
+  <b>Popular:</b>
+  <%= @useragent.popular %>
+</p>
+
+<p>
+  <b>Gbs:</b>
+  <%= @useragent.gbs %>
+</p>
+
+<p>
+  <b>Beta:</b>
+  <%= @useragent.beta %>
+</p>
+
+<p>
+  <b>Mobile:</b>
+  <%= @useragent.mobile %>
+</p>
+
+
+<%= link_to 'Edit', edit_useragent_path(@useragent) %> |
+<%= link_to 'Back', useragents_path %>

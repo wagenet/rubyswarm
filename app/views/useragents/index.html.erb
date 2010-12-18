@@ -1,0 +1,39 @@
+<h1>Listing useragents</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Engine</th>
+    <th>Version</th>
+    <th>Active</th>
+    <th>Current</th>
+    <th>Popular</th>
+    <th>Gbs</th>
+    <th>Beta</th>
+    <th>Mobile</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @useragents.each do |useragent| %>
+  <tr>
+    <td><%= useragent.name %></td>
+    <td><%= useragent.engine %></td>
+    <td><%= useragent.version %></td>
+    <td><%= useragent.active %></td>
+    <td><%= useragent.current %></td>
+    <td><%= useragent.popular %></td>
+    <td><%= useragent.gbs %></td>
+    <td><%= useragent.beta %></td>
+    <td><%= useragent.mobile %></td>
+    <td><%= link_to 'Show', useragent %></td>
+    <td><%= link_to 'Edit', edit_useragent_path(useragent) %></td>
+    <td><%= link_to 'Destroy', useragent, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Useragent', new_useragent_path %>
