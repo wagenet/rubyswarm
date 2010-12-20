@@ -10,7 +10,7 @@ RubySwarm::Application.routes.draw do
     end
   end
 
-  resources :clients
+  resources :clients, :only => [:index, :show]
 
   root :to => "welcome#index"
 

@@ -6,7 +6,6 @@
     <th>Useragent</th>
     <th>Os</th>
     <th>Useragent</th>
-    <th>Ip</th>
     <th></th>
     <th></th>
     <th></th>
@@ -17,15 +16,8 @@
     <td><%= client.user_id %></td>
     <td><%= client.useragent_id %></td>
     <td><%= client.os %></td>
-    <td><%= client.useragent %></td>
-    <td><%= client.ip %></td>
+    <td><%= client.useragentstr %></td>
     <td><%= link_to 'Show', client %></td>
-    <td><%= link_to 'Edit', edit_client_path(client) %></td>
-    <td><%= link_to 'Destroy', client, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
-
-<br />
-
-<%= link_to 'New Client', new_client_path %>
