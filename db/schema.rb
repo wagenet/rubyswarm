@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(:version => 20101218010835) do
     t.string   "os"
     t.text     "useragentstr"
     t.string   "ip"
+    t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
