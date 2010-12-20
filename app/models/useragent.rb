@@ -3,6 +3,12 @@ class Useragent < ActiveRecord::Base
   has_many :useragent_runs
   has_many :clients
 
+  scope :active,  where(:active => true)
+  scope :popular, where(:popular => true)
+  scope :gbs,     where(:gbs => true)
+  scope :beta,    where(:beta => true)
+  scope :mobile,  where(:mobile => true)
+
   class << self
 
     def parse(str)
