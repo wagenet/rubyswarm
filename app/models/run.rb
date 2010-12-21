@@ -18,7 +18,7 @@ class Run < ActiveRecord::Base
     def setup_useragentruns
       return unless browsers
 
-      useragents = %w(popular gbs beta mobile).inject(Useragent.active) do |list, type|
+      useragents = Job::BROWSERS.inject(Useragent.active) do |list, type|
         browsers.include?(type) ? list.send(type) : list
       end
 

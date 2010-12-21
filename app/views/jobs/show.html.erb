@@ -15,6 +15,16 @@
   <%= @job.status %>
 </p>
 
+<p>
+  <b>Browsers:</b>
+  <%= @job.browsers %>
+</p>
+
+<p>
+  <b>Suites:</b>
+  <%= @job.suites %>
+</p>
+
 
 <%= link_to 'Edit', edit_job_path(@job) %> |
 <%= link_to 'Back', jobs_path %>

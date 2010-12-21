@@ -20,8 +20,15 @@
     <%= f.text_field :name %>
   </div>
   <div class="field">
-    <%= f.label :status %><br />
-    <%= f.text_field :status %>
+    <%= f.label :browers %><br />
+    <% for browser in Job::BROWSERS %>
+      <%= check_box_tag 'job[browsers][]', browser, @job.browsers && @job.browsers.include?(browser) %> <%= browser %>
+    <% end %>
+  </div>
+  <div class="field">
+    <%= f.label :suites %><br />
+    <%= f.text_area :suites, :value => @job.suites.map{|n, v| "#{n}: #{v}" }.join("\n") %>
+    <%= @job.suites.inspect %>
   </div>
   <div class="actions">
     <%= f.submit %>

@@ -5,6 +5,8 @@
     <th>User</th>
     <th>Name</th>
     <th>Status</th>
+    <th>Browsers</th>
+    <th>Suites</th>
     <th></th>
     <th></th>
     <th></th>
@@ -15,6 +17,8 @@
     <td><%= job.user_id %></td>
     <td><%= job.name %></td>
     <td><%= job.status %></td>
+    <td><%= job.browsers %></td>
+    <td><%= job.suites %></td>
     <td><%= link_to 'Show', job %></td>
     <td><%= link_to 'Edit', edit_job_path(job) %></td>
     <td><%= link_to 'Destroy', job, :confirm => 'Are you sure?', :method => :delete %></td>
