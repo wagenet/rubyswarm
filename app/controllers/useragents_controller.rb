@@ -4,8 +4,6 @@ class UseragentsController < ApplicationController
   # GET /useragents
   # GET /useragents.xml
   def index
-    @useragents = Useragent.all
-
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @useragents }
@@ -15,8 +13,6 @@ class UseragentsController < ApplicationController
   # GET /useragents/1
   # GET /useragents/1.xml
   def show
-    @useragent = Useragent.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @useragent }
@@ -26,8 +22,6 @@ class UseragentsController < ApplicationController
   # GET /useragents/new
   # GET /useragents/new.xml
   def new
-    @useragent = Useragent.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @useragent }
@@ -36,14 +30,11 @@ class UseragentsController < ApplicationController
 
   # GET /useragents/1/edit
   def edit
-    @useragent = Useragent.find(params[:id])
   end
 
   # POST /useragents
   # POST /useragents.xml
   def create
-    @useragent = Useragent.new(params[:useragent])
-
     respond_to do |format|
       if @useragent.save
         format.html { redirect_to(@useragent, :notice => 'Useragent was successfully created.') }
@@ -58,8 +49,6 @@ class UseragentsController < ApplicationController
   # PUT /useragents/1
   # PUT /useragents/1.xml
   def update
-    @useragent = Useragent.find(params[:id])
-
     respond_to do |format|
       if @useragent.update_attributes(params[:useragent])
         format.html { redirect_to(@useragent, :notice => 'Useragent was successfully updated.') }
@@ -74,7 +63,6 @@ class UseragentsController < ApplicationController
   # DELETE /useragents/1
   # DELETE /useragents/1.xml
   def destroy
-    @useragent = Useragent.find(params[:id])
     @useragent.destroy
 
     respond_to do |format|
