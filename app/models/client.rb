@@ -37,4 +37,8 @@ class Client < ActiveRecord::Base
     # TODO: Decrement UseragentRuns count
   end
 
+  def serializable_hash(*)
+    super.except('ip')
+  end
+
 end
