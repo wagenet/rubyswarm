@@ -5,6 +5,8 @@ class Job < ActiveRecord::Base
 
   serialize :suites
 
+  attr_accessible :user_id, :name, :browsers, :suites
+
 
   #TODO: Better association validation
   validates :user_id,  :presence => true

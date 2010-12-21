@@ -6,6 +6,8 @@ class Client < ActiveRecord::Base
   belongs_to :useragent
   has_many :client_runs
 
+  attr_accessible :user_id, :useragent_id, :os, :useragentstr, :ip
+
   # TODO: Should we have better association validation?
   validates :user_id,      :presence => true
   validates :useragent_id, :presence => true
