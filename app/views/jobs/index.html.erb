@@ -20,12 +20,12 @@
     <td><%= job.browsers %></td>
     <td><%= job.suites %></td>
     <td><%= link_to 'Show', job %></td>
-    <td><%= link_to 'Edit', edit_job_path(job) %></td>
-    <td><%= link_to 'Destroy', job, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Edit', edit_job_path(job) if can? :edit, job %></td>
+    <td><%= link_to 'Destroy', job, :confirm => 'Are you sure?', :method => :delete if can? :destroy, job %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Job', new_job_path %>
+<%= link_to 'New Job', new_job_path if can? :create, Job %>

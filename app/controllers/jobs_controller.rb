@@ -1,6 +1,5 @@
 class JobsController < ApplicationController
-
-  before_filter :authenticate_user!, :except => ['index', 'show']
+  load_and_authorize_resource
   before_filter :setup_client, :only => 'run'
 
   # GET /jobs

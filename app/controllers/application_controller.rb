@@ -3,6 +3,11 @@ class ApplicationController < ActionController::Base
 
   before_filter :expire_clients
 
+  rescue_from CanCan::AccessDenied do |exception|
+    flash[:error] = exception.message
+    redirect_to root_url
+  end
+
   private
 
     def expire_clients

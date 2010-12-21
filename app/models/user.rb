@@ -9,7 +9,12 @@ class User < ActiveRecord::Base
 
   has_many :jobs
   has_many :clients
+  has_and_belongs_to_many :roles
 
   before_save :ensure_authentication_token
+
+  def role?(role)
+    return !!self.roles.find_by_name(role.to_s.camelize)
+  end
 
 end

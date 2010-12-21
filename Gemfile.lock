@@ -31,6 +31,7 @@ GEM
     arel (2.0.6)
     bcrypt-ruby (2.1.2)
     builder (2.1.2)
+    cancan (1.4.1)
     daemons (1.1.0)
     devise (1.1.5)
       bcrypt-ruby (~> 2.1.2)
@@ -81,6 +82,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cancan
   devise
   rails (= 3.0.3)
   sqlite3-ruby

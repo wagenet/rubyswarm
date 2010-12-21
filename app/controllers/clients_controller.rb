@@ -1,4 +1,5 @@
 class ClientsController < ApplicationController
+  load_and_authorize_resource
 
   # GET /clients
   # GET /clients.xml

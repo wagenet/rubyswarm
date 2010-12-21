@@ -28,12 +28,12 @@
     <td><%= useragent.beta %></td>
     <td><%= useragent.mobile %></td>
     <td><%= link_to 'Show', useragent %></td>
-    <td><%= link_to 'Edit', edit_useragent_path(useragent) %></td>
-    <td><%= link_to 'Destroy', useragent, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Edit', edit_useragent_path(useragent) if can? :edit, useragent %></td>
+    <td><%= link_to 'Destroy', useragent, :confirm => 'Are you sure?', :method => :delete if can? :destroy, useragent %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Useragent', new_useragent_path %>
+<%= link_to 'New Useragent', new_useragent_path if can? :create, Useragent %>

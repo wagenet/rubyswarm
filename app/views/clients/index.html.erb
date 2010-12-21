@@ -17,7 +17,7 @@
     <td><%= client.useragent_id %></td>
     <td><%= client.os %></td>
     <td><%= client.useragentstr %></td>
-    <td><%= link_to 'Show', client %></td>
+    <td><%= link_to 'Show', client if can?(:read, client) %></td>
   </tr>
 <% end %>
 </table>
