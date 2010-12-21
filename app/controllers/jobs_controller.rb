@@ -34,14 +34,12 @@ class JobsController < ApplicationController
 
   # GET /jobs/1/edit
   def edit
-    @job = Job.find(params[:id])
   end
 
   # POST /jobs
   # POST /jobs.xml
   def create
-    @job = Job.new(params[:job])
-
+    @job.user_id = current_user.id
     respond_to do |format|
       if @job.save
         format.html { redirect_to(@job, :notice => 'Job was successfully created.') }
@@ -56,8 +54,6 @@ class JobsController < ApplicationController
   # PUT /jobs/1
   # PUT /jobs/1.xml
   def update
-    @job = Job.find(params[:id])
-
     respond_to do |format|
       if @job.update_attributes(params[:job])
         format.html { redirect_to(@job, :notice => 'Job was successfully updated.') }
@@ -72,7 +68,6 @@ class JobsController < ApplicationController
   # DELETE /jobs/1
   # DELETE /jobs/1.xml
   def destroy
-    @job = Job.find(params[:id])
     @job.destroy
 
     respond_to do |format|

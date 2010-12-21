@@ -7,7 +7,7 @@ class Job < ActiveRecord::Base
 
   serialize :suites
 
-  attr_accessible :user_id, :name, :browsers, :suites
+  attr_accessible :name, :browsers, :suites
 
 
   #TODO: Better association validation
@@ -22,7 +22,7 @@ class Job < ActiveRecord::Base
     self[:browsers] = case val
       when Array
         # This helps keep the order
-        BROWSERS.select{|b| val.include?(b) }
+        BROWSERS.select{|b| val.include?(b) }.join
       when String
         val
       else
