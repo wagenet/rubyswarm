@@ -1,1 +1,7 @@
 <p>Welcome</p>
+
+<ul>
+  <%= content_tag :li, link_to('Clients',    clients_path)    if can? :read, Client %>
+  <%= content_tag :li, link_to('Jobs',       jobs_path)       if can? :read, Job %>
+  <%= content_tag :li, link_to('Useragents', useragents_path) if can? :read, Useragent %>
+</ul>
