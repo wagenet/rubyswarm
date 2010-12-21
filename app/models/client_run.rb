@@ -1,10 +1,10 @@
 class ClientRun < ActiveRecord::Base
 
-  belongs_to :client
-  belongs_to :run
-
   RUNNING = 1
   DONE = 2
+
+  belongs_to :client
+  belongs_to :run
 
   scope :running, where(:status => RUNNING)
   scope :done, where(:status => DONE)
