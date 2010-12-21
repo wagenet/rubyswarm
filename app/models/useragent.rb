@@ -3,6 +3,11 @@ class Useragent < ActiveRecord::Base
   has_many :useragent_runs
   has_many :clients
 
+  validates :name,    :presence => true
+  validates :engine,  :presence => true
+  validates :version, :presence => true
+
+
   scope :active,  where(:active => true)
   scope :popular, where(:popular => true)
   scope :gbs,     where(:gbs => true)

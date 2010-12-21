@@ -3,9 +3,16 @@ class Job < ActiveRecord::Base
   belongs_to :user
   has_many :runs
 
-  # Should these be actual variables in the db?
-  attr_accessor :browsers
-  attr_accessor :suites
+  serialize :suites
+
+
+  #TODO: Better association validation
+  validates :user_id,  :presence => true
+  validates :name,     :presence => true
+  validates :url,      :presence => true
+  validates :browsers, :presence => true
+  validates :suites,   :presence => true
+
 
   before_create :setup_runs
 

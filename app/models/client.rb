@@ -6,6 +6,13 @@ class Client < ActiveRecord::Base
   belongs_to :useragent
   has_many :client_runs
 
+  # TODO: Should we have better association validation?
+  validates :user_id,      :presence => true
+  validates :useragent_id, :presence => true
+  validates :os,           :presence => true
+  validates :useragentstr, :presence => true
+  validates :ip,           :presence => true
+
   scope :timedout, lambda{ where("updated_at < ? AND active = 1", Time.now - TIMEOUT) }
 
   class << self

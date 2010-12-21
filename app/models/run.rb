@@ -3,8 +3,13 @@ class Run < ActiveRecord::Base
   belongs_to :job
   has_many :useragent_runs
 
-  # Should this be an actual variable in the db?
-  attr_accessor :browsers
+
+  #TODO: Better association validation
+  validates :job_id,   :presence => true
+  validates :name,     :presence => true
+  validates :url,      :presence => true
+  validates :browsers, :presence => true
+
 
   before_create :setup_useragentruns
 
