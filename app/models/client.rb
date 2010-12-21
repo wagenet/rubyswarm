@@ -15,7 +15,7 @@ class Client < ActiveRecord::Base
   validates :useragentstr, :presence => true
   validates :ip,           :presence => true
 
-  scope :timedout, lambda{ where("updated_at < ? AND active = 1", Time.now - TIMEOUT) }
+  scope :timedout, lambda{ where("updated_at < ? AND active = ?", Time.now - TIMEOUT, true) }
 
   class << self
 
@@ -41,7 +41,7 @@ class Client < ActiveRecord::Base
   end
 
   def timeout
-    update_attributes(:active => false)
+    update_attribute(:active, false)
     client_runs.running.destroy_all
     # TODO: Decrement UseragentRuns count
   end
