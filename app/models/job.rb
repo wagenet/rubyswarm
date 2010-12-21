@@ -33,7 +33,7 @@ class Job < ActiveRecord::Base
   def suites=(val)
     self[:suites] = case val
       when String
-        returning({}){|ret| val.scan(/^(\w+):\s+(\S+)\s*$/){|name,url| ret[name] = url } }
+        Hash[*val.scan(/^(\w+):\s+(\S+)\s*$/).flatten]
       when Hash
         val
       else

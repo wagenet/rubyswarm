@@ -23,8 +23,7 @@
   </div>
   <div class="field">
     <%= f.label :suites %><br />
-    <%= f.text_area :suites, :value => @job.suites.map{|n, v| "#{n}: #{v}" }.join("\n") %>
-    <%= @job.suites.inspect %>
+    <%= f.text_area :suites, :value => @job.suites && @job.suites.map{|n, v| "#{n}: #{v}" }.join("\n") %>
   </div>
   <div class="actions">
     <%= f.submit %>

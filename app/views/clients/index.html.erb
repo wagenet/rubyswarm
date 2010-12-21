@@ -6,8 +6,7 @@
     <th>Useragent</th>
     <th>Os</th>
     <th>Useragent</th>
-    <th></th>
-    <th></th>
+    <th>Active</th>
     <th></th>
   </tr>
 
@@ -17,6 +16,7 @@
     <td><%= client.useragent_id %></td>
     <td><%= client.os %></td>
     <td><%= client.useragentstr %></td>
+    <td><%= client.active %></td>
     <td><%= link_to 'Show', client if can?(:read, client) %></td>
   </tr>
 <% end %>
