@@ -1,5 +1,7 @@
 class Useragent < ActiveRecord::Base
 
+  BROWSER_TYPES = %w(popular gbs beta mobile).freeze
+
   has_many :useragent_runs
   has_many :clients
 
@@ -9,10 +11,7 @@ class Useragent < ActiveRecord::Base
 
 
   scope :active,  where(:active => true)
-  scope :popular, where(:popular => true)
-  scope :gbs,     where(:gbs => true)
-  scope :beta,    where(:beta => true)
-  scope :mobile,  where(:mobile => true)
+  BROWSER_TYPES.each{|b| scope b, where(b => true) }
 
   class << self
 

@@ -1,7 +1,5 @@
 class Job < ActiveRecord::Base
 
-  BROWSERS = %w(popular gbs beta mobile).freeze
-
   belongs_to :user
   has_many :runs
 
@@ -22,7 +20,7 @@ class Job < ActiveRecord::Base
     self[:browsers] = case val
       when Array
         # This helps keep the order
-        BROWSERS.select{|b| val.include?(b) }.join
+        Useragent::BROWSER_TYPES.select{|b| val.include?(b) }.join
       when String
         val
       else

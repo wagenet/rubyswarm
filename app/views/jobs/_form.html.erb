@@ -17,7 +17,7 @@
   </div>
   <div class="field">
     <%= f.label :browers %><br />
-    <% for browser in Job::BROWSERS %>
+    <% for browser in Useragent::BROWSER_TYPES %>
       <%= check_box_tag 'job[browsers][]', browser, @job.browsers && @job.browsers.include?(browser) %> <%= browser %>
     <% end %>
   </div>
