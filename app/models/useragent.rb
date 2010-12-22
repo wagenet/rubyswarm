@@ -5,9 +5,9 @@ class Useragent < ActiveRecord::Base
   has_many :useragent_runs
   has_many :clients
 
-  validates :name,    :presence => true
+  validates :name,    :presence => true, :uniqueness => true
   validates :engine,  :presence => true
-  validates :version, :presence => true
+  validates :version, :presence => true, :uniqueness => { :scope => :name }
 
   scope :active,  where(:active => true)
   BROWSER_TYPES.each{|b| scope b, where(b => true) }
