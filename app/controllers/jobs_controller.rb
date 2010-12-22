@@ -32,10 +32,6 @@ class JobsController < ApplicationController
     end
   end
 
-  # GET /jobs/1/edit
-  def edit
-  end
-
   # POST /jobs
   # POST /jobs.xml
   def create
@@ -46,20 +42,6 @@ class JobsController < ApplicationController
         format.xml  { render :xml => @job, :status => :created, :location => @job }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @job.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-
-  # PUT /jobs/1
-  # PUT /jobs/1.xml
-  def update
-    respond_to do |format|
-      if @job.update_attributes(params[:job])
-        format.html { redirect_to(@job, :notice => 'Job was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
         format.xml  { render :xml => @job.errors, :status => :unprocessable_entity }
       end
     end

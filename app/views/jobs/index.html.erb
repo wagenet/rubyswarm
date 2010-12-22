@@ -9,7 +9,6 @@
     <th>Suites</th>
     <th></th>
     <th></th>
-    <th></th>
   </tr>
 
 <% @jobs.each do |job| %>
@@ -20,7 +19,6 @@
     <td><%= job.browsers %></td>
     <td><%= job.suites %></td>
     <td><%= link_to 'Show', job %></td>
-    <td><%= link_to 'Edit', edit_job_path(job) if can? :edit, job %></td>
     <td><%= link_to 'Destroy', job, :confirm => 'Are you sure?', :method => :delete if can? :destroy, job %></td>
   </tr>
 <% end %>

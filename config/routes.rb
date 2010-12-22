@@ -4,7 +4,7 @@ RubySwarm::Application.routes.draw do
 
   resources :useragents
 
-  resources :jobs do
+  resources :jobs, :except => [:edit, :update] do
     collection do
       get 'run'
     end
