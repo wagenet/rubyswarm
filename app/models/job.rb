@@ -1,7 +1,8 @@
 class Job < ActiveRecord::Base
 
   belongs_to :user
-  has_many :runs
+  has_many :runs, :dependent => :destroy
+  has_many :useragent_runs, :through => :runs
 
   serialize :suites
 

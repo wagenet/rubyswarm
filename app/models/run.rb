@@ -1,8 +1,7 @@
 class Run < ActiveRecord::Base
 
   belongs_to :job
-  has_many :useragent_runs
-
+  has_many :useragent_runs, :dependent => :destroy
 
   #TODO: Better association validation
   validates :job_id,   :presence => true
