@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(:version => 20101221171439) do
   create_table "useragent_runs", :force => true do |t|
     t.integer  "run_id"
     t.integer  "useragent_id"
-    t.integer  "runs"
+    t.integer  "runs",         :default => 0
     t.integer  "max"
     t.integer  "completed"
     t.integer  "status"
