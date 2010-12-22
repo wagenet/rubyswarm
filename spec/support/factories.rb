@@ -19,10 +19,15 @@ Factory.define :client_run do |f|
   f.association :client
 end
 
+Factory.define :role do |f|
+  f.name "Normal"
+end
+
 Factory.define :user do |f|
   f.email { Factory.next :email }
   f.password "passw0rd"
   f.password_confirmation "passw0rd"
+  f.roles {|r| [r.association(:role)] }
 end
 
 Factory.define :useragent do |f|
