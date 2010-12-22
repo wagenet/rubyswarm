@@ -11,3 +11,15 @@ gem 'cancan'
 group :development do
   gem 'thin'
 end
+
+group :development, :test do
+  gem 'autotest'
+  gem 'autotest-fsevent'
+  gem 'autotest-growl'
+  gem 'rspec-rails', '~> 2.0.1'
+end
+
+group :test do
+  gem 'factory_girl', :require => false
+  gem 'simplecov', '~> 0.3', :require => false
+end
