@@ -30,7 +30,10 @@ class Client < ActiveRecord::Base
         existing.update_attribute(:active, true)
         existing
       else
-        create(params.merge(:active => true))
+        client = new(params)
+        client.active = true
+        client.save
+        client
       end
     end
 
@@ -48,6 +51,11 @@ class Client < ActiveRecord::Base
 
   def serializable_hash(*)
     super.except('ip')
+  end
+
+  def to_xml(options = {})
+    (options[:except] ||= []) << :ip
+    super
   end
 
 end
