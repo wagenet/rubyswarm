@@ -3,11 +3,6 @@ class JobsController < ApplicationController
   before_filter :authenticate_user!, :only => ['run', 'get_run']
   before_filter :setup_client, :only => ['run', 'get_run']
 
-  verify :xhr => true,
-         :only => :get_run,
-         :add_flash => { 'alert' => "Ajax only" },
-         :redirect_to => :root_url
-
   # GET /jobs
   # GET /jobs.xml
   def index
@@ -21,6 +16,10 @@ class JobsController < ApplicationController
   end
 
   def get_run
+    unless request.xhr?
+      render :text => "Not allowed" and return
+    end
+
     @useragent_run = UseragentRun.pending.where(:useragent_id => @ua.id).first
     if @useragent_run && can?(:run, @useragent_run)
       @useragent_run.start_run
