@@ -1,7 +1,7 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user)
+  def initialize(user = nil)
     can :read, [Client, Useragent]
 
     if user

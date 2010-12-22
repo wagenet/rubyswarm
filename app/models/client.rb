@@ -23,17 +23,19 @@ class Client < ActiveRecord::Base
       uadata = Useragent.parse(uastr)
       useragent = Useragent.find_by_useragent(uadata)
 
-      params = { :user_id => user.id, :useragent_id => useragent.id, :os => uadata[:os], :useragentstr => uastr, :ip => ip }
+      if useragent
+        params = { :user_id => user.id, :useragent_id => useragent.id, :os => uadata[:os], :useragentstr => uastr, :ip => ip }
 
-      # Assume expired ones have been wiped
-      if existing = where(params).first
-        existing.update_attribute(:active, true)
-        existing
-      else
-        client = new(params)
-        client.active = true
-        client.save
-        client
+        # Assume expired ones have been wiped
+        if existing = where(params).first
+          existing.update_attribute(:active, true)
+          existing
+        else
+          client = new(params)
+          client.active = true
+          client.save
+          client
+        end
       end
     end
 

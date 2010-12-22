@@ -49,15 +49,18 @@ describe Client do
   describe "class methods" do
     describe "for_current" do
       it "should return existing and activate" do
-        client = create_client(:active => false)
-        found = Client.for_current(client.user, USERAGENTS[:chrome], client.ip)
+        uadata = USERAGENTS[:chrome]
+        useragent = create_useragent(:engine => uadata[:engine], :version => '.*')
+        client = create_client(:active => false, :useragent => useragent)
+        found = Client.for_current(client.user, uadata[:str], client.ip)
         found.should == client
         found.should be_active
       end
 
       it "should create if no existing" do
-        create_useragent
-        client = Client.for_current(current_user, USERAGENTS[:chrome], '192.168.1.1')
+        uadata = USERAGENTS[:chrome]
+        create_useragent(:engine => uadata[:engine], :version => '.*')
+        client = Client.for_current(current_user, uadata[:str], '192.168.1.1')
         client.should be_valid
         client.should_not be_new_record
         client.should be_active

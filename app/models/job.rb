@@ -19,11 +19,9 @@ class Job < ActiveRecord::Base
 
   def browsers=(val)
     self[:browsers] = case val
-      when Array
+      when Array, String
         # This helps keep the order
         Useragent::BROWSER_TYPES.select{|b| val.include?(b) }.join
-      when String
-        val
       else
         nil
     end

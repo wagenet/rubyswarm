@@ -12,9 +12,7 @@ describe User do
   end
 
   it "should check roles" do
-    user = create_user
-    puts "user.roles: #{user.roles.inspect}"
-    user.role?(:normal).should be_true
-    user.role?(:admin).should be_false
+    current_user.role?(:admin).should be_false
+    admin_user.role?(:admin).should be_true
   end
 end

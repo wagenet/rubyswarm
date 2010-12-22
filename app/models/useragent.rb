@@ -7,7 +7,7 @@ class Useragent < ActiveRecord::Base
 
   validates :name,    :presence => true, :uniqueness => true
   validates :engine,  :presence => true
-  validates :version, :presence => true, :uniqueness => { :scope => :name }
+  validates :version, :presence => true, :uniqueness => { :scope => :engine }
 
   scope :active,  where(:active => true)
   BROWSER_TYPES.each{|b| scope b, where(b => true) }
@@ -23,11 +23,9 @@ class Useragent < ActiveRecord::Base
       dstr = str.downcase
 
       version = case dstr
-        when /.+(rv|webos|applewebkit|presto|msie|konqueror)[\/: ]([0-9a-z.]+)/   then $2
         when /.*(webos|fennec|series60|blackberry[0-9]*[a-z]*)[\/: ]([0-9a-z.]+)/ then $2
-        # TODO: What is this checking for?
-        when /ms-rtc lm 8/                                                        then "8.0as7.0"
-        else                                                                           "unknown"
+        when /.+(rv|applewebkit|presto|msie|konqueror)[\/: ]([0-9a-z.]+)/         then $2
+        else                                                                      "unknown"
       end
 
       browser = case dstr
@@ -45,6 +43,7 @@ class Useragent < ActiveRecord::Base
         when /webkit/                 then "webkit"
         when /presto/                 then "presto"
         when /gecko/                  then "gecko"
+        else                               "unknown"
       end
 
       os = case dstr
@@ -57,7 +56,7 @@ class Useragent < ActiveRecord::Base
         when /iphone/          then "iphone"
         when /ipod/            then "ipod"
         when /ipad/            then "ipad"
-        when /symbian/         then "symbian"
+        when /symb/            then "symbian"
         when /webos/           then "webos"
         when /android/         then "android"
         when /windows phone/   then "winmo"
@@ -66,6 +65,7 @@ class Useragent < ActiveRecord::Base
         when /os x 10[\._]6/   then "osx10.6"
         when /os x/            then "osx"
         when /linux/           then "linux"
+        else                        "unknown"
       end
 
       { :browser => browser, :version => version, :os => os }
