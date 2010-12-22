@@ -22,14 +22,12 @@ class Useragent < ActiveRecord::Base
     def parse(str)
       dstr = str.downcase
 
-      if dstr =~ /.+(rv|webos|applewebkit|presto|msie|konqueror)[\/: ]([0-9a-z.]+)/
-        version = $2
-      elsif dstr =~ /.*(webos|fennec|series60|blackberry[0-9]*[a-z]*)[\/: ]([0-9a-z.]+)/
-		    version = $2
-      elsif dstr =~ /ms-rtc lm 8/
-		    version = "8.0as7.0"
-      else
-        version = "unknown"
+      version = case dstr
+        when /.+(rv|webos|applewebkit|presto|msie|konqueror)[\/: ]([0-9a-z.]+)/   then $2
+        when /.*(webos|fennec|series60|blackberry[0-9]*[a-z]*)[\/: ]([0-9a-z.]+)/ then $2
+        # TODO: What is this checking for?
+        when /ms-rtc lm 8/                                                        then "8.0as7.0"
+        else                                                                           "unknown"
       end
 
       browser = case dstr
