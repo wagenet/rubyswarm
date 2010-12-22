@@ -1,1 +1,54 @@
+<% content_for :head do %>
+  <script style="text/javascript">
+    var statusEl, testEl, updateTimer, updateCountdown;
+
+    function getRun(){
+      $.ajax({
+        url: '<%= get_run_jobs_path %>',
+        success: function(data){
+          if (data.run) {
+            statusEl.html("Running...");
+            testEl.attr('src', data.run.url);
+          } else {
+            if (data.message) {
+              statusEl.html(data.message);
+            } else {
+              statusEl.html("Unknown Error");
+            }
+            testEl.attr('src', '');
+          }
+          setTimeout(startCountdown, 3000);
+        }
+      });
+    }
+
+    function startCountdown(){
+      updateCountdown = 5; //<%= RubySwarm::RUN_UPDATE_FREQUENCY %>;
+      timerTick();
+    }
+
+    function timerTick(){
+      updateCountdown = updateCountdown - 1;
+
+      if (updateCountdown === 0) {
+        statusEl.html('Updating...');
+        getRun();
+      } else {
+        statusEl.html('Update in '+updateCountdown);
+        setTimeout(timerTick, 1000);
+      }
+    }
+
+    $(document).ready(function(){
+      statusEl = $('#status');
+      testEl = $('#test_runner');
+      startCountdown();
+    });
+  </script>
+<% end %>
+
 <%= @client.inspect %>
+
+<div id="status"></div>
+
+<iframe id="test_runner" style="width: 800px; height: 600px"></iframe>

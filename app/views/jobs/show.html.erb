@@ -20,10 +20,24 @@
   <%= @job.browsers %>
 </p>
 
-<p>
-  <b>Suites:</b>
-  <%= @job.suites %>
-</p>
+<b>Runs</b>
+<% useragents = Useragent.with_browser(@job.browsers).order('id') %>
+<table>
+  <tr>
+    <th></th>
+  <% for ua in useragents %>
+    <th><%= ua.name %></th>
+  <% end %>
+  </tr>
+<% for run in @job.runs %>
+  <tr>
+    <th><%= run.name %></th>
+  <% for uarun in run.useragent_runs.order('useragent_id') %>
+    <td><%= uarun.runs %></td>
+  <% end %>
+  </tr>
+<% end %>
+</table>
 
 
 <%= link_to 'Back', jobs_path %>

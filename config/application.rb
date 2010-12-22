@@ -41,4 +41,7 @@ module RubySwarm
 
     config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   end
+
+  RUN_UPDATE_FREQUENCY = 30
+
 end

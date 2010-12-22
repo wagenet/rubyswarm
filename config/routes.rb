@@ -7,6 +7,7 @@ RubySwarm::Application.routes.draw do
   resources :jobs, :except => [:edit, :update] do
     collection do
       get 'run'
+      get 'get_run'
     end
   end
 

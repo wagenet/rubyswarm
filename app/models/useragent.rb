@@ -9,9 +9,13 @@ class Useragent < ActiveRecord::Base
   validates :engine,  :presence => true
   validates :version, :presence => true
 
-
   scope :active,  where(:active => true)
   BROWSER_TYPES.each{|b| scope b, where(b => true) }
+  scope :with_browser, lambda{|browserstr|
+    sql = []; params = []
+    BROWSER_TYPES.select{|b| (browserstr || '').include?(b) }.each{|b| sql << "#{b} = ?"; params << true }
+    sql.empty? ? where("1 = 0") : where(sql.join(" OR "), *params)
+  }
 
   class << self
 

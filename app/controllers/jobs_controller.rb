@@ -1,6 +1,12 @@
 class JobsController < ApplicationController
-  load_and_authorize_resource
-  before_filter :setup_client, :only => 'run'
+  load_and_authorize_resource :except => ['run', 'get_run']
+  before_filter :authenticate_user!, :only => ['run', 'get_run']
+  before_filter :setup_client, :only => ['run', 'get_run']
+
+  verify :xhr => true,
+         :only => :get_run,
+         :add_flash => { 'alert' => "Ajax only" },
+         :redirect_to => :root_url
 
   # GET /jobs
   # GET /jobs.xml
@@ -12,6 +18,16 @@ class JobsController < ApplicationController
   end
 
   def run
+  end
+
+  def get_run
+    @useragent_run = UseragentRun.pending.where(:useragent_id => @ua.id).first
+    if @useragent_run && can?(:run, @useragent_run)
+      @useragent_run.start_run
+      render :json => @useragent_run.run
+    else
+      render :json => { :message => "Nothing to Run" }
+    end
   end
 
   # GET /jobs/1

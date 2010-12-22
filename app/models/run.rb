@@ -9,21 +9,13 @@ class Run < ActiveRecord::Base
   validates :url,      :presence => true
   validates :browsers, :presence => true
 
-
-  before_create :setup_useragentruns
+  before_create :setup_useragent_runs
 
   private
 
-    def setup_useragentruns
-      return unless browsers
-
-      useragents = Useragent::BROWSER_TYPES.inject(Useragent.active) do |list, type|
-        browsers.include?(type) ? list.send(type) : list
-      end
-
-      for ua in useragents
-        #TODO: Set the max here
-        useragent_runs.build(:useragent_id => ua.id)
+    def setup_useragent_runs
+      Useragent.with_browser(browsers).each do |ua|
+        useragent_runs.build(:useragent_id => ua.id, :max => 1)
       end
     end
 
