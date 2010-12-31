@@ -17,6 +17,7 @@ group :development, :test do
   gem 'autotest-fsevent'
   gem 'autotest-growl'
   gem 'rspec-rails', '~> 2.0.1'
+  gem 'capybara', '~> 0.4.0', :git => 'git://github.com/jnicklas/capybara.git', :require => false
 end
 
 group :test do

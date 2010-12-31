@@ -17,7 +17,7 @@ class UseragentRun < ActiveRecord::Base
 
     self.runs += 1
     self.status = IN_PROGRESS
-    save(false)
+    save(:validation => false)
   end
 
 end
