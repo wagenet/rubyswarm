@@ -146,7 +146,7 @@ DEPENDENCIES
   factory_girl
   jquery-rails (>= 0.2.6)
   rails (= 3.0.3)
-  rspec-rails (~> 2.0.1)
+  rspec-rails
   simplecov (~> 0.3)
   sqlite3-ruby
   thin
