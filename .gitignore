@@ -3,5 +3,8 @@ db/*.sqlite3
 log/*.log
 tmp/**/*
 coverage
+public/sc_tests
+public/sproutcore
+sc_tests
 *.swp
 *.swo
