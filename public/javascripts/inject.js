@@ -51,10 +51,43 @@
       return ret;
     };
 
+  // QUnit (jQuery)
+	// http://docs.jquery.com/QUnit
+  } else if ( typeof QUnit !== "undefined" ) {
+		QUnit.done = function(fail, total){
+			submitSuccess({
+				fail: fail,
+				error: 0,
+				total: total
+			});
+		};
+
+		QUnit.log = window.RubySwarm.heartbeat;
+		window.RubySwarm.heartbeat();
+
+		window.RubySwarm.serialize = function(){
+			// Clean up the HTML (remove any un-needed test markup)
+			remove("nothiddendiv");
+			remove("loadediframe");
+			remove("dl");
+			remove("main");
+
+			// Show any collapsed results
+			var ol = document.getElementsByTagName("ol");
+			for ( var i = 0; i < ol.length; i++ ) {
+				ol[i].style.display = "block";
+			}
+
+			return trimSerialize();
+		};
   }
 
   function submit(params){
-    console.log('submit', params);
+    if (window.top.testSubmission) {
+      window.top.testSubmission(params);
+    } else {
+      console.log('submit', params);
+    }
   }
 
   function submitSuccess(params){

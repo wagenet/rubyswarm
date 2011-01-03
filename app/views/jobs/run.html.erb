@@ -1,25 +1,46 @@
 <% content_for :head do %>
   <script style="text/javascript">
-    var statusEl, testEl, updateTimer, updateCountdown;
+    var timerStatusEl, runStatusEl, testEl, updateTimer, updateCountdown;
 
     function getRun(){
       $.ajax({
-        url: '<%= get_run_jobs_path %>',
+        url: '<%= get_useragent_runs_path %>',
         success: function(data){
+          timerStatusEl.html('');
+
           if (data.run) {
-            statusEl.html("Running...");
+            runStatusEl.html("Loading...");
             testEl.attr('src', data.run.url);
+
+            var loadFunc = function(){
+              testEl.unbind('load', loadFunc);
+              startRun();
+            };
+            testEl.bind('load', loadFunc);
           } else {
             if (data.message) {
-              statusEl.html(data.message);
+              runStatusEl.html(data.message);
             } else {
-              statusEl.html("Unknown Error");
+              runStatusEl.html("Unknown Error");
             }
             testEl.attr('src', '');
+            setTimeout(startCountdown, 3000);
           }
-          setTimeout(startCountdown, 3000);
         }
       });
+    }
+
+    function startRun(){
+      var testWin;
+      try {
+        testWin = testEl[0].contentWindow;
+      } catch (e){};
+      if (testWin && testWin.RubySwarm) {
+        runStatusEl.html("Running...");
+      } else {
+        runStatusEl.html("No tests to run");
+      }
+      setTimeout(startCountdown, 3000);
     }
 
     function startCountdown(){
@@ -31,16 +52,22 @@
       updateCountdown = updateCountdown - 1;
 
       if (updateCountdown === 0) {
-        statusEl.html('Updating...');
+        timerStatusEl.html('Updating...');
         getRun();
       } else {
-        statusEl.html('Update in '+updateCountdown);
+        timerStatusEl.html('Update in '+updateCountdown);
         setTimeout(timerTick, 1000);
       }
     }
 
+    function testSubmission(params){
+      console.log('testSubmission', params);
+      runStatusEl.html("Results -- Fail: "+params.fail+", Error: "+params.error+", Total: "+params.total);
+    }
+
     $(document).ready(function(){
-      statusEl = $('#status');
+      timerStatusEl = $('#timer_status');
+      runStatusEl = $('#run_status');
       testEl = $('#test_runner');
       startCountdown();
     });
@@ -49,6 +76,7 @@
 
 <%= @client.inspect %>
 
-<div id="status"></div>
+<div id="timer_status"></div>
+<div id="run_status"></div>
 
 <iframe id="test_runner" style="width: 800px; height: 600px"></iframe>
