@@ -7,11 +7,16 @@ RubySwarm::Application.routes.draw do
   resources :jobs, :except => [:edit, :update] do
     collection do
       get 'run'
-      get 'get_run'
     end
   end
 
   resources :clients, :only => [:index, :show]
+
+  resources :useragent_runs, :only => [:update] do
+    collection do
+      get 'get'
+    end
+  end
 
   root :to => "welcome#index"
 

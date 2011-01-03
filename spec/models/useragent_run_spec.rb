@@ -28,16 +28,78 @@ describe UseragentRun do
     end
   end
 
+  describe "status" do
+    before(:each) do
+      @running = create_useragent_run(:status => UseragentRun::RUNNING)
+      @done = create_useragent_run(:status => UseragentRun::DONE)
+    end
+
+    it "should tell if running" do
+      @running.running?.should be_true
+      @done.running?.should be_false
+    end
+
+    it "should tell if done" do
+      @running.done?.should be_false
+      @done.done?.should be_true
+    end
+  end
+
   describe "start_run" do
+    before(:each) do
+      @client = create_client
+    end
+
     it "should update runs and status" do
       uar = create_useragent_run(:runs => 0)
-      uar.start_run.should be_true
+      uar.start_run(@client).should be_true
       uar.runs.should == 1
-      uar.status.should == UseragentRun::IN_PROGRESS
+      uar.status.should == UseragentRun::RUNNING
+    end
+
+    it "should create client run" do
+      cr_count = ClientRun.count
+      uar = create_useragent_run
+      uar.start_run(@client)
+
+      ClientRun.count.should == cr_count + 1
+
+      cr = ClientRun.last
+      cr.client.should == @client
+      cr.run.should == uar.run
+      cr.status.should == ClientRun::RUNNING
     end
 
     it "should not allow unsaved records" do
-      build_useragent_run.start_run.should be_false
+      build_useragent_run.start_run(@client).should be_false
     end
   end
+
+  describe "run cancelled" do
+    it "should decrements runs" do
+      uar = create_useragent_run(:status => UseragentRun::RUNNING, :runs => 1)
+      uar.run_cancelled.should be_true
+      uar.runs.should == 0
+    end
+
+    it "should set back to running" do
+      uar = create_useragent_run(:status => UseragentRun::DONE, :runs => 1)
+      uar.run_cancelled.should be_true
+      uar.runs.should == 0
+      uar.should be_running
+    end
+
+    it "should not cancel new run" do
+      uar = create_useragent_run(:status => 0, :runs => 1)
+      uar.run_cancelled.should be_false
+      uar.runs.should == 1
+    end
+
+    it "should not cancel if no runs" do
+      uar = create_useragent_run(:status => UseragentRun::DONE, :runs => 0)
+      uar.run_cancelled.should be_false
+      uar.should be_done
+    end
+  end
+
 end

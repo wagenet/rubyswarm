@@ -48,7 +48,6 @@ class Client < ActiveRecord::Base
   def timeout
     update_attribute(:active, false)
     client_runs.running.destroy_all
-    # TODO: Decrement UseragentRuns count
   end
 
   def serializable_hash(*)

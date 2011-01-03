@@ -53,37 +53,5 @@ describe "Jobs" do
       reset_headers
       current_path.should == run_jobs_path
     end
-
-    describe "get run" do
-      before(:each) do
-        @uadata = USERAGENTS[:chrome]
-        add_headers 'HTTP_USER_AGENT' => @uadata[:str],
-                    'HTTP_ACCEPT' => 'application/json, text/javascript, */*',
-                    'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'
-      end
-
-      after(:each) do
-        reset_headers
-      end
-
-      it "should require XHR" do
-        remove_header 'HTTP_X_REQUESTED_WITH'
-        visit get_run_jobs_path
-
-        page.should have_content("Not allowed")
-      end
-
-      it "should find pending run" do
-        useragent = create_useragent(:engine => @uadata[:engine], :version => @uadata[:version])
-        useragent_run = create_useragent_run(:useragent => useragent)
-        visit get_run_jobs_path
-        page.body.should == useragent_run.run.to_json
-      end
-
-      it "should notify when no runs" do
-        visit get_run_jobs_path
-        page.body.should == { :message => "Nothing to Run" }.to_json
-      end
-    end
   end
 end

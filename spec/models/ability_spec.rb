@@ -26,7 +26,7 @@ describe Ability do
 
     describe "blocked" do
       [Job, Run, UseragentRun, ClientRun].each do |klass|
-        it "should blo]k #{klass.name}" do
+        it "should block #{klass.name}" do
           [:read, :create, :update, :destroy].each{|action| @ability.should_not be_able_to(action, klass) }
         end
       end

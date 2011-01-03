@@ -1,7 +1,7 @@
 class JobsController < ApplicationController
-  load_and_authorize_resource :except => ['run', 'get_run']
-  before_filter :authenticate_user!, :only => ['run', 'get_run']
-  before_filter :setup_client, :only => ['run', 'get_run']
+  load_and_authorize_resource :except => :run
+  before_filter :authenticate_user!, :only => :run
+  before_filter :setup_client,       :only => :run
 
   # GET /jobs
   # GET /jobs.xml
@@ -13,20 +13,6 @@ class JobsController < ApplicationController
   end
 
   def run
-  end
-
-  def get_run
-    unless request.xhr?
-      render :text => "Not allowed" and return
-    end
-
-    @useragent_run = @ua && UseragentRun.pending.where(:useragent_id => @ua.id).first
-    if @useragent_run && can?(:run, @useragent_run)
-      @useragent_run.start_run
-      render :json => @useragent_run.run
-    else
-      render :json => { :message => "Nothing to Run" }
-    end
   end
 
   # GET /jobs/1
@@ -72,13 +58,5 @@ class JobsController < ApplicationController
       format.xml  { head :ok }
     end
   end
-
-  private
-
-    def setup_client
-      uastr = request.env['HTTP_USER_AGENT']
-      @ua = Useragent.find_by_useragent(uastr)
-      @client = Client.for_current(current_user, uastr, request.ip)
-    end
 
 end

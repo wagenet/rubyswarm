@@ -1,6 +1,7 @@
 class UseragentRun < ActiveRecord::Base
 
-  IN_PROGRESS = 1
+  RUNNING = 1
+  DONE = 2
 
   belongs_to :run
   belongs_to :useragent
@@ -12,11 +13,31 @@ class UseragentRun < ActiveRecord::Base
 
   scope :pending, where("runs < max")
 
-  def start_run
+  def running?
+    status == RUNNING
+  end
+
+  def done?
+    status == DONE
+  end
+
+  def start_run(client)
     return false if new_record?
 
     self.runs += 1
-    self.status = IN_PROGRESS
+    self.status = RUNNING
+    save(:validation => false)
+
+    cr = client.client_runs.build(:status => ClientRun::RUNNING)
+    cr.run_id = run_id
+    cr.client = client
+    cr.save(:validation => false)
+  end
+
+  def run_cancelled
+    return false unless (running? || done?) && runs > 0
+    self.runs -= 1
+    self.status = RUNNING
     save(:validation => false)
   end
 
