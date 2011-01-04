@@ -16,7 +16,9 @@ class UseragentRunsController < ApplicationController
 
   # TODO: I'm not entirely sure about the way this method actually updates client_run not useragent_run
   def update
-    @useragent_run = UseragentRun.find(params[:id])
+    # FIXME: Can we clean this up?
+    @useragent_run = @ua && UseragentRun.where(:useragent_id => @ua.id, :run_id => params[:id]).first
+    raise ActiveRecord::RecordNotFound unless @useragent_run
     authorize! :run, @useragent_run
 
     @client_run = ClientRun.where(:run_id => @useragent_run.run_id, :client_id => @client.id).first

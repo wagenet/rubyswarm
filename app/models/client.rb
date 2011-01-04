@@ -4,7 +4,7 @@ class Client < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :useragent
-  has_many :client_runs
+  has_many :client_runs, :dependent => :destroy
 
   attr_accessible :user_id, :useragent_id, :os, :useragentstr, :ip
 

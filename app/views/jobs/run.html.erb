@@ -1,75 +1,167 @@
 <% content_for :head do %>
   <script style="text/javascript">
-    var timerStatusEl, runStatusEl, testEl, updateTimer, updateCountdown;
 
-    function getRun(){
-      $.ajax({
-        url: '<%= get_useragent_runs_path %>',
-        success: function(data){
-          timerStatusEl.html('');
+    var RubySwarm = {
 
-          if (data.run) {
-            runStatusEl.html("Loading...");
-            testEl.attr('src', data.run.url);
+      timerStatusEl: null,
+      runStatusEl: null,
+      testEl: null,
+      updateTimer: null,
+      updateCountdown: null,
+      currentRun: null,
 
-            var loadFunc = function(){
-              testEl.unbind('load', loadFunc);
-              startRun();
-            };
-            testEl.bind('load', loadFunc);
-          } else {
-            if (data.message) {
-              runStatusEl.html(data.message);
-            } else {
-              runStatusEl.html("Unknown Error");
-            }
-            testEl.attr('src', '');
-            setTimeout(startCountdown, 3000);
-          }
+      testSuccess: function(msg){
+        this.runStatusEl.html(msg);
+
+        var self = this;
+        setTimeout(function(){ self.startCountdown(); }, 3000);
+      },
+
+      testError: function(error){
+        this.runStatusEl.html(error);
+
+        var self = this;
+        setTimeout(function(){ self.startCountdown(); }, 3000);
+      },
+
+      startCountdown: function(){
+        this.updateCountdown = 5; //<%= RubySwarm::RUN_UPDATE_FREQUENCY %>;
+        this.timerTick();
+      },
+
+      timerTick: function(){
+        var self = this;
+
+        this.updateCountdown = this.updateCountdown - 1;
+
+        if (this.updateCountdown === 0) {
+          this.timerStatusEl.html('');
+          this.runStatusEl.html('Finding Tests...');
+
+          this.currentRun = new RubySwarm.Run({
+            testEl: this.testEl,
+            gotData: function(){ self.runStatusEl.html("Loading..."); },
+            loaded: function(){ self.runStatusEl.html("Running..."); },
+            success: function(msg){ self.testSuccess(msg); },
+            error: function(error){ self.testError(error); }
+          });
+          this.currentRun.get();
+        } else {
+          this.timerStatusEl.html('Update in '+this.updateCountdown);
+          setTimeout(function(){ self.timerTick(); }, 1000);
         }
-      });
-    }
+      },
 
-    function startRun(){
-      var testWin;
-      try {
-        testWin = testEl[0].contentWindow;
-      } catch (e){};
-      if (testWin && testWin.RubySwarm) {
-        runStatusEl.html("Running...");
-      } else {
-        runStatusEl.html("No tests to run");
+      submitTest: function(params){
+        console.log('submitTest', params);
+        if (this.currentRun) {
+          this.currentRun.testsCompleted(params);
+        } else {
+          console.error("No current test!");
+        }
       }
-      setTimeout(startCountdown, 3000);
-    }
 
-    function startCountdown(){
-      updateCountdown = 5; //<%= RubySwarm::RUN_UPDATE_FREQUENCY %>;
-      timerTick();
-    }
+    };
 
-    function timerTick(){
-      updateCountdown = updateCountdown - 1;
+    RubySwarm.Run = function(attrs){
+      this.testEl = attrs.testEl;
+      this.gotData = attrs.gotData;
+      this.loaded = attrs.loaded;
+      this.success = attrs.success;
+      this.error = attrs.error;
+    };
 
-      if (updateCountdown === 0) {
-        timerStatusEl.html('Updating...');
-        getRun();
-      } else {
-        timerStatusEl.html('Update in '+updateCountdown);
-        setTimeout(timerTick, 1000);
+    $.extend(RubySwarm.Run.prototype, {
+      /**
+        Get job data
+      */
+      get: function(){
+        var self = this;
+        $.ajax({
+          url: '<%= get_useragent_runs_path(:format => :json) %>',
+          success: function(data){ self.processData(data); },
+          error: function(req, msg){ self.handleError(msg); }
+        });
+      },
+
+      /**
+        Process job data
+      */
+      processData: function(data) {
+        var self = this;
+
+        if (data.run) {
+          this.gotData();
+
+          this.id = data.run.id;
+          this.testEl.attr('src', data.run.url);
+
+          var loadFunc = function(){
+            self.testEl.unbind('load', loadFunc);
+            self.startTests();
+          };
+          this.testEl.bind('load', loadFunc);
+        } else {
+          this.error(data.message || "Unknown Error");
+        }
+      },
+
+      /**
+        Handle error
+      */
+      handleError: function(msg){
+        this.error("Error: "+msg);
+      },
+
+      /**
+        Start tests running
+      */
+      startTests: function(){
+        var self = this, testWin;
+        try {
+          testWin = this.testEl[0].contentWindow;
+        } catch (e){};
+        if (testWin && testWin.RubySwarmRunner) {
+          this.loaded();
+        } else {
+          this.error("No tests to run");
+        }
+      },
+
+      /**
+        Tests finished
+      */
+      testsCompleted: function(params){
+        $.ajax({
+          url:  '<%= useragent_run_path('000', :format => :json) %>'.replace('000', this.id),
+          type: 'POST',
+          data: {
+            _method: 'PUT',
+            run: {
+              fail: params.fail || 0,
+              error: params.error || 0,
+              total: params.total || 0,
+              status: <%= ClientRun::DONE %>
+            }
+          },
+          dataType: 'json',
+          success: function(){
+            console.log('Success');
+          },
+          error: function(r, msg){
+            console.log("Error: "+msg);
+          }
+        })
+        this.success("Results -- Fail: "+params.fail+", Error: "+params.error+", Total: "+params.total);
       }
-    }
 
-    function testSubmission(params){
-      console.log('testSubmission', params);
-      runStatusEl.html("Results -- Fail: "+params.fail+", Error: "+params.error+", Total: "+params.total);
-    }
+    });
 
     $(document).ready(function(){
-      timerStatusEl = $('#timer_status');
-      runStatusEl = $('#run_status');
-      testEl = $('#test_runner');
-      startCountdown();
+      RubySwarm.timerStatusEl = $('#timer_status');
+      RubySwarm.runStatusEl = $('#run_status');
+      RubySwarm.testEl = $('#test_runner');
+      RubySwarm.startCountdown();
     });
   </script>
 <% end %>

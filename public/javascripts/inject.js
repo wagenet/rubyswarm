@@ -1,6 +1,6 @@
 (function(){
 
-  if (window.RubySwarm) { return; }
+  if (window.RubySwarmRunner) { return; }
 
   var submitTimeout = 5;
 
@@ -11,7 +11,7 @@
   var keepaliveRate = 120;
 
   // Expose the RubySwarm API
-  window.RubySwarm = {
+  window.RubySwarmRunner = {
     heartbeat: function(){
       if (curHeartbeat) { clearTimeout( curHeartbeat ); }
       curHeartbeat = setTimeout(submitTimeout, beatRate * 1000);
@@ -46,8 +46,8 @@
 
     CoreTest.Runner.planDidRecord = function() {
       var ret = originalPlanDidRecord.apply(this, arguments);
-      window.RubySwarm.heartbeat();
-      window.RubySwarm.keepalive();
+      window.RubySwarmRunner.heartbeat();
+      window.RubySwarmRunner.keepalive();
       return ret;
     };
 
@@ -62,10 +62,10 @@
 			});
 		};
 
-		QUnit.log = window.RubySwarm.heartbeat;
-		window.RubySwarm.heartbeat();
+		QUnit.log = window.RubySwarmRunner.heartbeat;
+		window.RubySwarmRunner.heartbeat();
 
-		window.RubySwarm.serialize = function(){
+		window.RubySwarmRunner.serialize = function(){
 			// Clean up the HTML (remove any un-needed test markup)
 			remove("nothiddendiv");
 			remove("loadediframe");
@@ -83,8 +83,8 @@
   }
 
   function submit(params){
-    if (window.top.testSubmission) {
-      window.top.testSubmission(params);
+    if (window.top.RubySwarm && window.top.RubySwarm.submitTest) {
+      window.top.RubySwarm.submitTest(params);
     } else {
       console.log('submit', params);
     }

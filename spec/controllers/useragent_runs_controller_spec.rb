@@ -50,11 +50,11 @@ describe UseragentRunsController do
 
       it "should return NotFound without ClientRun" do
         @client_run.destroy
-        lambda{ xhr :put, 'update', :id => @useragent_run.id }.should raise_error(ActiveRecord::RecordNotFound)
+        lambda{ xhr :put, 'update', :id => @useragent_run.run_id }.should raise_error(ActiveRecord::RecordNotFound)
       end
 
       it "should update with valid attributes" do
-        xhr :put, 'update', :id => @useragent_run.id, :run => { :status => ClientRun::DONE, :fail => 1, :error => 2, :total => 5 }
+        xhr :put, 'update', :id => @useragent_run.run_id, :run => { :status => ClientRun::DONE, :fail => 1, :error => 2, :total => 5 }
         @client_run.reload
         @client_run.fail.should == 1
         @client_run.error.should == 2
@@ -63,7 +63,7 @@ describe UseragentRunsController do
       end
 
       it "should handle invalid attributes" do
-        xhr :put, 'update', :id => @useragent_run.id, :run => { :total => -1 }
+        xhr :put, 'update', :id => @useragent_run.run_id, :run => { :total => -1 }
         response.should_not be_success
       end
     end
