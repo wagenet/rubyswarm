@@ -12,7 +12,7 @@ RubySwarm::Application.routes.draw do
 
   resources :clients, :only => [:index, :show]
 
-  resources :useragent_runs, :only => [:update] do
+  resources :runs, :only => [:update] do
     collection do
       get 'get'
     end

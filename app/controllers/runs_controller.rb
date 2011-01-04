@@ -1,4 +1,4 @@
-class UseragentRunsController < ApplicationController
+class RunsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :setup_client
   before_filter :check_xhr
@@ -14,7 +14,7 @@ class UseragentRunsController < ApplicationController
     end
   end
 
-  # TODO: I'm not entirely sure about the way this method actually updates client_run not useragent_run
+  # TODO: I'm not entirely sure about the way this method actually updates client_run not run
   def update
     # FIXME: Can we clean this up?
     @useragent_run = @ua && UseragentRun.where(:useragent_id => @ua.id, :run_id => params[:id]).first

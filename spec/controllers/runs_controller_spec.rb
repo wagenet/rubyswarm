@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UseragentRunsController do
+describe RunsController do
   describe "normal user" do
     before(:each) do
       sign_in current_user

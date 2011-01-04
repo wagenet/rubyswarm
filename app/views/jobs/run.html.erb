@@ -78,7 +78,7 @@
       get: function(){
         var self = this;
         $.ajax({
-          url: '<%= get_useragent_runs_path(:format => :json) %>',
+          url: '<%= get_runs_path(:format => :json) %>',
           success: function(data){ self.processData(data); },
           error: function(req, msg){ self.handleError(msg); }
         });
@@ -133,7 +133,7 @@
       */
       testsCompleted: function(params){
         $.ajax({
-          url:  '<%= useragent_run_path('000', :format => :json) %>'.replace('000', this.id),
+          url:  '<%= run_path('000', :format => :json) %>'.replace('000', this.id),
           type: 'POST',
           data: {
             _method: 'PUT',
