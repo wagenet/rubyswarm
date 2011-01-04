@@ -22,8 +22,6 @@ class ClientRun < ActiveRecord::Base
 
   before_destroy :notify_cancelled
 
-  attr_accessible :status, :fail, :error, :total, :results
-
   class << self
     def expire
       timedout.each(&:timeout)
@@ -46,6 +44,14 @@ class ClientRun < ActiveRecord::Base
     return false unless running?
     update_attribute(:status, FAILED)
     notify_cancelled(true)
+  end
+
+  def save_results(attrs)
+    self.fail = attrs[:fail]
+    self.error = attrs[:error]
+    self.total = attrs[:total]
+    self.status = (self.fail + self.error > 0) ? FAILED : DONE
+    save
   end
 
   private

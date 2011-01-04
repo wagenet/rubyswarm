@@ -140,8 +140,7 @@
             run: {
               fail: params.fail || 0,
               error: params.error || 0,
-              total: params.total || 0,
-              status: <%= ClientRun::DONE %>
+              total: params.total || 0
             }
           },
           dataType: 'json',
@@ -151,7 +150,7 @@
           error: function(r, msg){
             console.log("Error: "+msg);
           }
-        })
+        });
         this.success("Results -- Fail: "+params.fail+", Error: "+params.error+", Total: "+params.total);
       }
 

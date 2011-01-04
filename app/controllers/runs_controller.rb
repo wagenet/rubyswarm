@@ -26,7 +26,7 @@ class RunsController < ApplicationController
 
     respond_to do |format|
       #TODO: Should we check permissions on the client_run?
-      if @client_run.update_attributes(params[:run])
+      if @client_run.save_results(params[:run])
         format.json { head :ok }
       else
         format.json { render :json => @client_run.errors, :status => :unprocessable_entity }

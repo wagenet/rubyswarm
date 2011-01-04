@@ -20,8 +20,11 @@
   <%= @job.browsers %>
 </p>
 
+<%# FIXME: This next bit is a mess %>
+
 <b>Runs</b>
 <% useragents = Useragent.with_browser(@job.browsers).order('id') %>
+<% client_runs = ClientRun.where(:run_id => @job.runs.map(&:id)).includes(:client) %>
 <table>
   <tr>
     <th></th>
@@ -32,8 +35,15 @@
 <% for run in @job.runs %>
   <tr>
     <th><%= run.name %></th>
+  <%# Keep the same order as the useragents %>
   <% for uarun in run.useragent_runs.order('useragent_id') %>
-    <td><%= uarun.runs %></td>
+    <%
+      uacrs = client_runs.select{|cr| cr.run_id == run.id && cr.client.useragent_id == uarun.useragent_id }
+      has_failed = uacrs.any?(&:failed?)
+      has_running = uacrs.any?(&:running?)
+      status = has_failed ? 'F' : (has_running ? 'R' : (uacrs.first ? uacrs.first.total : '-'))
+    %>
+    <td><%= status %></td>
   <% end %>
   </tr>
 <% end %>
