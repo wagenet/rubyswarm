@@ -54,10 +54,10 @@ describe RunsController do
       end
 
       it "should update with valid attributes" do
-        xhr :put, 'update', :id => @useragent_run.run_id, :run => { :status => ClientRun::DONE, :fail => 1, :error => 2, :total => 5 }
+        xhr :put, 'update', :id => @useragent_run.run_id, :run => { :fail => 0, :error => 0, :total => 5 }
         @client_run.reload
-        @client_run.fail.should == 1
-        @client_run.error.should == 2
+        @client_run.fail.should == 0
+        @client_run.error.should == 0
         @client_run.total.should == 5
         @client_run.should be_done
       end

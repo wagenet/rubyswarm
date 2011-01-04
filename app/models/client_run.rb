@@ -47,9 +47,9 @@ class ClientRun < ActiveRecord::Base
   end
 
   def save_results(attrs)
-    self.fail = attrs[:fail]
-    self.error = attrs[:error]
-    self.total = attrs[:total]
+    self.fail = attrs[:fail] || 0
+    self.error = attrs[:error] || 0
+    self.total = attrs[:total] || 0
     self.status = (self.fail + self.error > 0) ? FAILED : DONE
     save
   end

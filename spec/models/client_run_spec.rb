@@ -114,6 +114,28 @@ describe ClientRun do
     end
   end
 
+  describe "save results" do
+    before(:each) do
+      @client_run = build_client_run(:status => ClientRun::RUNNING)
+    end
+
+    it "should save without errors" do
+      @client_run.save_results(:fail => 0, :error => 0, :total => 5).should be_true
+      @client_run.fail.should == 0
+      @client_run.error.should == 0
+      @client_run.total.should == 5
+      @client_run.should be_done
+    end
+
+    it "should save with errors" do
+      @client_run.save_results(:fail => 1, :error => 1, :total => 5).should be_true
+      @client_run.fail.should == 1
+      @client_run.error.should == 1
+      @client_run.total.should == 5
+      @client_run.should be_failed
+    end
+  end
+
   describe "notify cancelled" do
     before(:each) do
       @client = create_client
