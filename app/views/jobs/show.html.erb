@@ -23,13 +23,14 @@
 <%# FIXME: This next bit is a mess %>
 
 <b>Runs</b>
+
 <% useragents = Useragent.with_browser(@job.browsers).order('id') %>
 <% client_runs = ClientRun.where(:run_id => @job.runs.map(&:id)).includes(:client) %>
 <table>
   <tr>
     <th></th>
   <% for ua in useragents %>
-    <th><%= ua.name %></th>
+    <th><%= image_tag "browsers/#{ua.engine}.sm.png", :width => 24, :height => 24, :title => ua.name %></th>
   <% end %>
   </tr>
 <% for run in @job.runs %>
@@ -38,12 +39,16 @@
   <%# Keep the same order as the useragents %>
   <% for uarun in run.useragent_runs.order('useragent_id') %>
     <%
+      #FIXME: This is all a bit crazy
       uacrs = client_runs.select{|cr| cr.run_id == run.id && cr.client.useragent_id == uarun.useragent_id }
-      has_failed = uacrs.any?(&:failed?)
-      has_running = uacrs.any?(&:running?)
-      status = has_failed ? 'F' : (has_running ? 'R' : (uacrs.first ? uacrs.first.total : '-'))
+      total, bgcolor, color = case
+        when uacrs.any?(&:failed?)  then [uacrs.sort_by(&:fail).reverse.first.fail, 'red', 'white']
+        when uacrs.any?(&:running?) then ['R', 'yellow', 'black']
+        when uacrs.first            then [uacrs.sort_by(&:total).reverse.first.total, 'green', 'white']
+        else                             ['-', 'transparent', 'black']
+      end
     %>
-    <td><%= status %></td>
+    <td style="background-color:<%= bgcolor %>; color:<%= color %>; text-align:center;"><%= total %></td>
   <% end %>
   </tr>
 <% end %>
