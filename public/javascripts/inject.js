@@ -4,21 +4,14 @@
 
   var submitTimeout = 5;
 
-  var curHeartbeat;
-  var beatRate = 20;
-
   var curKeepalive;
-  var keepaliveRate = 120;
+  var keepaliveRate = 10; // Needs to be less than timeout in run.html
 
   // Expose the RubySwarm API
   window.RubySwarmRunner = {
-    heartbeat: function(){
-      if (curHeartbeat) { clearTimeout( curHeartbeat ); }
-      curHeartbeat = setTimeout(submitTimeout, beatRate * 1000);
-    },
     keepalive: function(){
       if (curKeepalive) return;
-      curKeepalive = setTimeout(submitKeepalive, keepaliveRate * 1000);
+      curKeepalive = setTimeout(keepalive, keepaliveRate * 1000);
     },
     serialize: function(){
       console.log('serialize');
@@ -46,7 +39,6 @@
 
     CoreTest.Runner.planDidRecord = function() {
       var ret = originalPlanDidRecord.apply(this, arguments);
-      window.RubySwarmRunner.heartbeat();
       window.RubySwarmRunner.keepalive();
       return ret;
     };
@@ -62,8 +54,8 @@
 			});
 		};
 
-		QUnit.log = window.RubySwarmRunner.heartbeat;
-		window.RubySwarmRunner.heartbeat();
+		QUnit.log = window.RubySwarmRunner.keepalive;
+		window.RubySwarmRunner.keepalive();
 
 		window.RubySwarmRunner.serialize = function(){
 			// Clean up the HTML (remove any un-needed test markup)
@@ -91,7 +83,6 @@
   }
 
   function submitSuccess(params){
-    if (curHeartbeat) { clearTimeout(curHeartbeat); }
     if (curKeepalive) { clearTimeout(curKeepalive); }
     submit(params);
   }
@@ -100,12 +91,16 @@
     submitSuccess({ fail: -1, total: -1 });
   }
 
-  function submitKeepalive(){
+  function keepalive(){
     if (curKeepalive) {
       clearTimeout(curKeepalive);
       curKeepalive = null;
     }
-    submit({ keepalive: true });
+    if (window.top.RubySwarm && window.top.RubySwarm.keepalive) {
+      window.top.RubySwarm.keepalive();
+    } else {
+      console.log('keepalive');
+    }
   }
 
 })();

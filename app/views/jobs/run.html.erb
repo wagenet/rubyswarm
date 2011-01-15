@@ -3,12 +3,14 @@
 
     var RubySwarm = {
 
+      timeout: 20,
       timerStatusEl: null,
       runStatusEl: null,
       testEl: null,
       updateTimer: null,
       updateCountdown: null,
       currentRun: null,
+      tickerTimer: null,
 
       testSuccess: function(msg){
         this.runStatusEl.html(msg);
@@ -25,12 +27,14 @@
       },
 
       startCountdown: function(){
-        this.updateCountdown = 5; //<%= RubySwarm::RUN_UPDATE_FREQUENCY %>;
+        this.updateCountdown = <%= RubySwarm::RUN_UPDATE_FREQUENCY %>;
         this.timerTick();
       },
 
       timerTick: function(){
         var self = this;
+
+        if (this.tickerTimer) clearTimeout(this.tickerTimer);
 
         this.updateCountdown = this.updateCountdown - 1;
 
@@ -48,14 +52,23 @@
           this.currentRun.get();
         } else {
           this.timerStatusEl.html('Update in '+this.updateCountdown);
-          setTimeout(function(){ self.timerTick(); }, 1000);
+          this.tickerTimer = setTimeout(function(){ self.timerTick(); }, 1000);
         }
       },
 
       submitTest: function(params){
         console.log('submitTest', params);
         if (this.currentRun) {
-          this.currentRun.testsCompleted(params);
+          this.currentRun.submit(params);
+        } else {
+          console.error("No current test!");
+        }
+      },
+
+      keepalive: function(){
+        console.log('keepalive', params);
+        if (this.currentRun) {
+          this.currentRun.startTimeout();
         } else {
           console.error("No current test!");
         }
@@ -123,15 +136,33 @@
         } catch (e){};
         if (testWin && testWin.RubySwarmRunner) {
           this.loaded();
+          this.startTimeout();
         } else {
           this.error("No tests to run");
         }
       },
 
+      startTimeout: function(){
+        this.stopTimeout();
+
+        var self = this;
+        this.timeoutTimer = setTimeout(function(){ self.timedout(); }, RubySwarm.timeout * 1000);
+      },
+
+      stopTimeout: function(){
+        if (this.timeoutTimer) clearTimeout(this.timeoutTimer);
+      },
+
+      timedout: function(){
+        this.submit({ fail: -1, total: -1 });
+      },
+
       /**
-        Tests finished
+        Submit results
       */
-      testsCompleted: function(params){
+      submit: function(params) {
+        this.stopTimeout();
+
         $.ajax({
           url:  '<%= run_path('000', :format => :json) %>'.replace('000', this.id),
           type: 'POST',
@@ -151,7 +182,11 @@
             console.log("Error: "+msg);
           }
         });
-        this.success("Results -- Fail: "+params.fail+", Error: "+params.error+", Total: "+params.total);
+        if (params.total === -1) {
+          this.error("Couldn't run tests");
+        } else {
+          this.success("Results -- Fail: "+params.fail+", Error: "+params.error+", Total: "+params.total);
+        }
       }
 
     });
