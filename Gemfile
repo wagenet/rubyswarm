@@ -8,9 +8,6 @@ gem 'jquery-rails', '>= 0.2.6'
 gem 'devise'
 gem 'cancan'
 
-# For Proxy
-gem 'strobe'
-
 group :development do
   gem 'thin'
 end
