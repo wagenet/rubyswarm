@@ -16,6 +16,7 @@ require 'factory_girl'
 require 'cancan/matchers'
 require 'capybara/rails'
 require 'capybara/rspec'
+require 'rack/test'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

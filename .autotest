@@ -1,9 +1,13 @@
 Autotest.add_hook :initialize do |at|
-  at.add_mapping(%r%^spec/(integration)/.*rb$%) {|filename, _|
+  at.add_mapping(%r%^spec/(integration|rack)/.*rb$%) {|filename, _|
     filename
   }
 
   at.add_mapping(%r%^app/(controllers/(.+)_controller\.rb|views/(.+)/.+)$%) { |_, m|
     ["spec/integration/#{m[2]}_spec.rb"]
+  }
+
+  at.add_mapping(%r%^lib/rack/(.+).rb$%) { |_, m|
+    ["spec/rack/#{m[1]}_spec.rb"]
   }
 end
