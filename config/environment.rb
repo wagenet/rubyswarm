@@ -1,6 +1,6 @@
 # Load the rails application
 require File.expand_path('../application', __FILE__)
-require 'github_proxy'
+require File.join(Rails.root, 'lib', 'github_proxy')
 
 RubySwarm::Application.configure do
   config.middleware.use GithubProxy
