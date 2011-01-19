@@ -1,9 +1,9 @@
 # Load the rails application
 require File.expand_path('../application', __FILE__)
-require File.expand_path('vendor/strobe/middleware/proxy', Rails.root)
+require 'github_proxy'
 
 RubySwarm::Application.configure do
-  config.middleware.use Strobe::Middleware::Proxy
+  config.middleware.use GithubProxy
 end
 
 # Initialize the rails application
