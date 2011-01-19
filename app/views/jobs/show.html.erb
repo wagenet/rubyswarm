@@ -54,7 +54,7 @@
           [nil, '-', 'transparent', 'black']
       end
     %>
-    <td style="background-color:<%= bgcolor %>; color:<%= color %>; text-align:center;"><%= link_to_if uacr, total, uacr, :style => "color:#{color}" %></td>
+    <td style="background-color:<%= bgcolor %>; color:<%= color %>; text-align:center;"><%= link_to_if uacr.try(:results), total, uacr, :style => "color:#{color}" %></td>
   <% end %>
   </tr>
 <% end %>
