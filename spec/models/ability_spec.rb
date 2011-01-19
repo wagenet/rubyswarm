@@ -37,7 +37,7 @@ describe Ability do
     before(:each){ @ability = Ability.new(current_user) }
 
     describe "blocked" do
-      [UseragentRun, ClientRun].each do |klass|
+      [UseragentRun].each do |klass|
         it "should block #{klass.name}" do
           [:read, :create, :update, :destroy].each{|action| @ability.should_not be_able_to(action, klass) }
         end
@@ -71,6 +71,8 @@ describe Ability do
     it "should allow run for UseragentRun" do
       @ability.should be_able_to(:run, UseragentRun)
     end
+
+    it "should allow ClientRun read only"
   end
 
   describe "admin" do

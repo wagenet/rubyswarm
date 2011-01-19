@@ -18,6 +18,8 @@ RubySwarm::Application.routes.draw do
     end
   end
 
+  resources :client_runs, :only => [:show]
+
   root :to => "welcome#index"
 
 end

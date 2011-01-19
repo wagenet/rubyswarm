@@ -41,14 +41,20 @@
     <%
       #FIXME: This is all a bit crazy
       uacrs = client_runs.select{|cr| cr.run_id == run.id && cr.client.useragent_id == uarun.useragent_id }
-      total, bgcolor, color = case
-        when uacrs.any?(&:failed?)  then [uacrs.sort_by(&:fail).reverse.first.fail, 'red', 'white']
-        when uacrs.any?(&:running?) then ['R', 'yellow', 'black']
-        when uacrs.first            then [uacrs.sort_by(&:total).reverse.first.total, 'green', 'white']
-        else                             ['-', 'transparent', 'black']
+      uacr, total, bgcolor, color = case
+        when uacrs.any?(&:failed?)
+          uacr = uacrs.sort_by(&:fail).reverse.first
+          [uacr, uacr.fail, 'red', 'white']
+        when uacrs.any?(&:running?)
+          [nil, 'R', 'yellow', 'black']
+        when uacrs.first
+          uacr = uacrs.sort_by(&:total).reverse.first
+          [uacr, uacr.total, 'green', 'white']
+        else
+          [nil, '-', 'transparent', 'black']
       end
     %>
-    <td style="background-color:<%= bgcolor %>; color:<%= color %>; text-align:center;"><%= total %></td>
+    <td style="background-color:<%= bgcolor %>; color:<%= color %>; text-align:center;"><%= link_to_if uacr, total, uacr, :style => "color:#{color}" %></td>
   <% end %>
   </tr>
 <% end %>

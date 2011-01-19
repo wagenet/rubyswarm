@@ -13,6 +13,8 @@ class Ability
         # TODO: Should we clean this up a bit more?
         can(:manage, Run){|r| r.job.user_id == user.id }
 
+        can(:read, ClientRun){|cr| cr.run.job.user_id == user.id }
+
         can :run, UseragentRun
       end
     end
