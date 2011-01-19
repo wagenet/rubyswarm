@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rack/lobster'
 
 describe "Github Proxy" do
   include Rack::Test::Methods
@@ -6,12 +7,12 @@ describe "Github Proxy" do
   def app
     Rack::Builder.app do
       use GithubProxy
-      lambda { |env| [200, {'Content-Type' => 'text/plain'}, 'OK'] }
+      run Rack::Lobster.new
     end
   end
 
   it "should pass-through non-matching calls" do
     get "/"
-    last_response.body.should == 'OK'
+    last_response.body.should =~ /Lobstericious/
   end
 end
