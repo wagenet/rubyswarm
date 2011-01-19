@@ -51,6 +51,7 @@ class ClientRun < ActiveRecord::Base
     self.error = attrs[:error] || 0
     self.total = attrs[:total] || 0
     self.status = (self.fail + self.error > 0) ? FAILED : DONE
+    self.results = attrs[:results]
     save
   end
 
