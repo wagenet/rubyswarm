@@ -69,6 +69,7 @@ GEM
     jquery-rails (0.2.6)
       rails (~> 3.0)
       thor (~> 0.14.4)
+    json (1.4.6)
     json_pure (1.4.6)
     mail (2.2.11)
       activesupport (>= 2.3.6)
@@ -145,6 +146,7 @@ DEPENDENCIES
   devise
   factory_girl
   jquery-rails (>= 0.2.6)
+  json
   rails (= 3.0.3)
   rspec-rails
   simplecov (~> 0.3)

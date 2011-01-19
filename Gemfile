@@ -7,6 +7,7 @@ gem 'jquery-rails', '>= 0.2.6'
 
 gem 'devise'
 gem 'cancan'
+gem 'json'
 
 group :development do
   gem 'thin'
