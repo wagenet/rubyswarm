@@ -77,17 +77,17 @@ def clean_rev(str, rev, frev)
 end
 
 for frev in revs
-	rev = frev[0..6]
+  rev = frev[0..6]
 
-	unless done.include?(rev)
-		puts "New revision: #{rev}" if DEBUG
+  unless done.include?(rev)
+    puts "New revision: #{rev}" if DEBUG
 
-		@build_suites.call if @build_suites
+    @build_suites.call if @build_suites
 
-		props = {
-			"max"        => @max_runs,
-			"name"       => @job_name,
-			"browsers"   => @browsers,
+    props = {
+      "max"        => @max_runs,
+      "name"       => @job_name,
+      "browsers"   => @browsers,
       "revision"   => frev,
       "url"        => @job_url
     }
@@ -96,7 +96,7 @@ for frev in revs
     props["suites"] = {}
     for name, path in @suites.sort
       props["suites"][clean_rev(name, rev, frev)] = clean_rev(path, rev, frev)
-		end
+    end
 
     params = {
       'auth_token' => @auth_token,
@@ -104,7 +104,7 @@ for frev in revs
     }
 
     cmd = %[curl -i -X POST -H "Content-Type:application/json" -H "Accept:application/json" -w %{http_code} -d '#{params.to_json}' #{@swarm}/jobs.json]
-		puts cmd if DEBUG
+    puts cmd if DEBUG
 
     results = `#{cmd}`
     code = -1
@@ -118,12 +118,12 @@ for frev in revs
     end
 
     if code.to_i == 201
-		  done << rev
-		else
-		  puts "Job not submitted properly"
+      done << rev
+    else
+      puts "Job not submitted properly"
     end
-	else
-		puts "Old revision: #{rev}" if DEBUG
+  else
+    puts "Old revision: #{rev}" if DEBUG
   end
 end
 
@@ -131,6 +131,6 @@ puts "Saving completed revisions" if DEBUG
 
 File.open("#{@base_dir}/done.txt", 'w') do |f|
   for key in done
-	  f.puts key
+    f.puts key
   end
 end
