@@ -2,8 +2,10 @@
 
 <table>
   <tr>
+    <th>Date</th>
     <th>User</th>
     <th>Name</th>
+    <th>Revision</th>
     <th>Status</th>
     <th>Browsers</th>
     <th>Suites</th>
@@ -13,11 +15,13 @@
 
 <% @jobs.each do |job| %>
   <tr>
-    <td><%= job.user_id %></td>
-    <td><%= job.name %></td>
+    <td><%= job.test_creation_date %></td>
+    <td><%= job.user.email %></td>
+    <td><%= link_to_if job.url, job.name, job.url %></td>
+    <td><%= job.revision %></td>
     <td><%= job.status %></td>
     <td><%= job.browsers %></td>
-    <td><%= job.suites %></td>
+    <td><%= job.suites.keys.join(', ') %></td>
     <td><%= link_to 'Show', job %></td>
     <td><%= link_to 'Destroy', job, :confirm => 'Are you sure?', :method => :delete if can? :destroy, job %></td>
   </tr>

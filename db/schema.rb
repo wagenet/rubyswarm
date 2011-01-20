@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101221171439) do
+ActiveRecord::Schema.define(:version => 20110120023627) do
 
   create_table "client_runs", :force => true do |t|
     t.integer  "run_id"
@@ -49,6 +49,9 @@ ActiveRecord::Schema.define(:version => 20101221171439) do
     t.datetime "updated_at"
     t.string   "browsers"
     t.text     "suites"
+    t.string   "url"
+    t.string   "revision"
+    t.datetime "test_creation_date"
   end
 
   add_index "jobs", ["user_id"], :name => "index_jobs_on_user_id"

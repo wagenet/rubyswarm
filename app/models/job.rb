@@ -6,16 +6,16 @@ class Job < ActiveRecord::Base
 
   serialize :suites
 
-  attr_accessible :name, :browsers, :suites
+  attr_accessible :name, :browsers, :suites, :url, :revision, :test_creation_date
 
 
   #TODO: Better association validation
   validates :user_id,  :presence => true
-  validates :name,     :presence => true
+  validates :name,     :presence => true, :uniqueness => { :scope => :revision }
   validates :browsers, :presence => true
   validates :suites,   :presence => true
 
-  before_create :setup_runs
+  before_create :setup_runs, :set_test_creation_date
 
   def browsers=(val)
     self[:browsers] = case val
@@ -46,6 +46,10 @@ class Job < ActiveRecord::Base
       for name, url in suites
         runs.build(:name => name, :url => url, :browsers => browsers)
       end
+    end
+
+    def set_test_creation_date
+      self.test_creation_date ||= Time.now
     end
 
 end

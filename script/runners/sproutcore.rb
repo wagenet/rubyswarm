@@ -20,7 +20,8 @@
 # (pick a descriptive, but short, name to make it easy to search)
 # Note: The string {REV} will be replaced with the current
 #       commit number/hash.
-@job_name = "SproutCore Commit <a href=\"http://github.com/sproutcore/sproutcore/commit/{FREV}\">{REV}</a>"
+@job_name = "SproutCore Commit"
+@job_url = "<a href=\"http://github.com/sproutcore/sproutcore/commit/{FREV}\">{REV}</a>"
 
 # The browsers you wish to run against. Options include:
 #  - "all" all available browsers.
@@ -87,6 +88,8 @@ for frev in revs
 			"max"        => @max_runs,
 			"name"       => @job_name,
 			"browsers"   => @browsers,
+      "revision"   => frev,
+      "url"        => @job_url
     }
     props.each{|k,v| props[k] = clean_rev(v, rev, frev) }
 
