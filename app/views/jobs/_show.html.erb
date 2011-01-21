@@ -33,6 +33,16 @@
   </tr>
 <% end %>
 </table>
+
+<p>
+  <b>Fail:</b>
+  <%= job.fails %>
+  <b>Error:</b>
+  <%= job.errors %>
+  <b>Total:</b>
+  <%= job.total %>
+</p>
+
 <script type="text/javascript">
   jobStatus = '<%= @job.status %>';
 </script>

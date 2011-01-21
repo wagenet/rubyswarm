@@ -6,6 +6,7 @@ class Job < ActiveRecord::Base
   belongs_to :user
   has_many :runs, :dependent => :destroy
   has_many :useragent_runs, :through => :runs
+  has_many :client_runs, :through => :runs
 
   serialize :suites
 
@@ -47,6 +48,18 @@ class Job < ActiveRecord::Base
       else
         nil
     end
+  end
+
+  def fails
+    client_runs.sum(:fail)
+  end
+
+  def errors
+    client_runs.sum(:error)
+  end
+
+  def total
+    client_runs.sum(:total)
   end
 
   def run_started
