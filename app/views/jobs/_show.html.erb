@@ -1,0 +1,38 @@
+<% useragents = Useragent.with_browser(job.browsers).order('id') %>
+<% client_runs = ClientRun.where(:run_id => job.runs.map(&:id)).includes(:client) %>
+<table>
+  <tr>
+    <th></th>
+  <% for ua in useragents %>
+    <th><%= image_tag "browsers/#{ua.engine}.sm.png", :width => 24, :height => 24, :title => ua.name %></th>
+  <% end %>
+  </tr>
+<% for run in job.runs %>
+  <tr>
+    <th><%= run.name %></th>
+  <%# Keep the same order as the useragents %>
+  <% for uarun in run.useragent_runs.order('useragent_id') %>
+    <%
+      #FIXME: This is all a bit crazy
+      uacrs = client_runs.select{|cr| cr.run_id == run.id && cr.client.useragent_id == uarun.useragent_id }
+      uacr, total, bgcolor, color = case
+        when uacrs.any?(&:failed?)
+          uacr = uacrs.sort_by(&:fail).reverse.first
+          [uacr, uacr.fail, 'red', 'white']
+        when uacrs.any?(&:running?)
+          [nil, 'R', 'yellow', 'black']
+        when uacrs.first
+          uacr = uacrs.sort_by(&:total).reverse.first
+          [uacr, uacr.total, 'green', 'white']
+        else
+          [nil, '-', 'transparent', 'black']
+      end
+    %>
+    <td style="background-color:<%= bgcolor %>; color:<%= color %>; text-align:center;"><%= link_to_if uacr.try(:results), total, uacr, :style => "color:#{color}" %></td>
+  <% end %>
+  </tr>
+<% end %>
+</table>
+<script type="text/javascript">
+  var jobStatus = '<%= @job.status %>';
+</script>

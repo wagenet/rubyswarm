@@ -22,6 +22,7 @@ class JobsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @job }
+      format.js   { render :partial => 'show', :locals => { :job => @job } }
     end
   end
 
