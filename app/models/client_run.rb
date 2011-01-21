@@ -40,6 +40,10 @@ class ClientRun < ActiveRecord::Base
     status == DONE
   end
 
+  def useragent_run
+    @useragent_run ||= UseragentRun.where(:useragent_id => client.useragent_id, :run_id => run_id).first
+  end
+
   def timeout
     return false unless running?
     update_attribute(:status, FAILED)
@@ -52,15 +56,19 @@ class ClientRun < ActiveRecord::Base
     self.total = attrs[:total] || 0
     self.status = (self.fail + self.error > 0) ? FAILED : DONE
     self.results = attrs[:results]
-    save
+    if save
+      useragent_run.run_completed if useragent_run
+      true
+    else
+      false
+    end
   end
 
   private
 
     def notify_cancelled(force = false)
       if (running? || done?) || force
-        uar = UseragentRun.where(:useragent_id => client.useragent_id, :run_id => run_id).first
-        uar.run_cancelled if uar
+        useragent_run.run_cancelled if useragent_run
       end
     end
 

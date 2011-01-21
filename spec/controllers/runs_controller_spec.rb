@@ -24,7 +24,7 @@ describe RunsController do
         xhr :get, 'get'
 
         response.should be_success
-        response.body.should == useragent_run.run.to_json
+        response.body.should == useragent_run.run.reload.to_json
       end
 
       it "should notify when no runs" do

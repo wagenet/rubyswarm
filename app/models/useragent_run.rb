@@ -22,10 +22,13 @@ class UseragentRun < ActiveRecord::Base
   end
 
   def start_run(client)
-    return false if new_record?
+    return false if new_record? || done?
 
     self.runs += 1
-    self.status = RUNNING
+    if self.status != RUNNING
+      self.status = RUNNING
+      run.run_started
+    end
     save(:validation => false)
 
     cr = client.client_runs.build(:status => ClientRun::RUNNING)
@@ -39,6 +42,15 @@ class UseragentRun < ActiveRecord::Base
     self.runs -= 1
     self.status = RUNNING
     save(:validation => false)
+  end
+
+  def run_completed
+    return false unless running?
+    if runs == max
+      run.run_completed
+      self.status = DONE
+      save(:validation => false)
+    end
   end
 
 end

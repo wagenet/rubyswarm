@@ -1,5 +1,8 @@
 class Job < ActiveRecord::Base
 
+  RUNNING = 1
+  DONE = 2
+
   belongs_to :user
   has_many :runs, :dependent => :destroy
   has_many :useragent_runs, :through => :runs
@@ -16,6 +19,14 @@ class Job < ActiveRecord::Base
   validates :suites,   :presence => true
 
   before_create :setup_runs, :set_test_creation_date
+
+  def running?
+    status == RUNNING
+  end
+
+  def done?
+    status == DONE
+  end
 
   def browsers=(val)
     self[:browsers] = case val
@@ -36,6 +47,16 @@ class Job < ActiveRecord::Base
       else
         nil
     end
+  end
+
+  def run_started
+    return false if done? || running?
+    update_attribute(:status, RUNNING)
+  end
+
+  def run_completed
+    return false unless running?
+    update_attribute(:status, DONE)
   end
 
   private

@@ -73,6 +73,18 @@ describe UseragentRun do
     it "should not allow unsaved records" do
       build_useragent_run.start_run(@client).should be_false
     end
+
+    it "should notify run on first run" do
+      uar = create_useragent_run
+      uar.run.should_receive(:run_started)
+      uar.start_run(@client)
+    end
+
+    it "should not notify run on second run" do
+      uar = create_useragent_run(:runs => 1)
+      uar.run.should_receive(:run_started)
+      uar.start_run(@client)
+    end
   end
 
   describe "run cancelled" do
@@ -99,6 +111,38 @@ describe UseragentRun do
       uar = create_useragent_run(:status => UseragentRun::DONE, :runs => 0)
       uar.run_cancelled.should be_false
       uar.should be_done
+    end
+  end
+
+  describe "run_completed" do
+    it "should set status to DONE" do
+      uar = create_useragent_run(:status => UseragentRun::RUNNING, :runs => 1, :max => 1)
+      uar.run_completed
+      uar.status.should == UseragentRun::DONE
+    end
+
+    it "should notify run of completion" do
+      uar = create_useragent_run(:status => UseragentRun::RUNNING, :runs => 1, :max => 1)
+      uar.run.should_receive(:run_completed)
+      uar.run_completed
+    end
+
+    it "should not run unless runs is max" do
+      uar = create_useragent_run(:status => UseragentRun::RUNNING, :runs => 1, :max => 2)
+      uar.run_completed.should be_false
+      uar.status.should == UseragentRun::RUNNING
+    end
+
+    it "should not run if no status" do
+      uar = create_useragent_run(:runs => 1, :max => 1)
+      uar.run_completed.should be_false
+      uar.status.should be_nil
+    end
+
+    it "should not run if done" do
+      uar = create_useragent_run(:status => UseragentRun::DONE, :runs => 1, :max => 1)
+      uar.run_completed.should be_false
+      uar.status.should == UseragentRun::DONE
     end
   end
 

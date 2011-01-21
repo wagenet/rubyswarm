@@ -83,6 +83,24 @@ describe ClientRun do
     end
   end
 
+  describe "useragent_run" do
+    before(:each) do
+      @uar = create_useragent_run
+      @client = create_client(:useragent => @uar.useragent)
+      @cr = create_client_run(:client => @client, :run => @uar.run)
+    end
+
+    it "should find" do
+      @cr.useragent_run.should == @uar
+    end
+
+    it "should cache" do
+      @cr.useragent_run # Cache it
+      @uar.destroy
+      @cr.useragent_run.should == @uar
+    end
+  end
+
   describe "timeout" do
     before(:each) do
       @client = create_client
@@ -133,6 +151,13 @@ describe ClientRun do
       @client_run.error.should == 1
       @client_run.total.should == 5
       @client_run.should be_failed
+    end
+
+    it "should notify the useragent_run that the run completed" do
+      create_useragent_run(:useragent => @client_run.client.useragent, :run => @client_run.run)
+      # I normally discourage stubbing but I think it's ok in this case, all I want to check is that it notifies
+      @client_run.useragent_run.should_receive(:run_completed)
+      @client_run.save_results(:fail => 0, :error => 0, :total => 5).should be_true
     end
   end
 

@@ -55,6 +55,10 @@ Factory.sequence :version do |n|
   "^#{n}$"
 end
 
+Factory.sequence :revision do |n|
+  "r#{n}"
+end
+
 
 Factory.define :client do |f|
   f.association  :user
@@ -65,13 +69,15 @@ Factory.define :client do |f|
 end
 
 Factory.define :client_run do |f|
-  f.run_id 1
+  f.association :run
   f.association :client
+  f.results     "<html><body>Results</body></html>"
 end
 
 Factory.define :job do |f|
   f.association :user
   f.name "Job"
+  f.revision { Factory.next :revision }
   f.browsers "popular"
   f.suites "One: http://google.com"
 end

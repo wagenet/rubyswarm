@@ -1,5 +1,8 @@
 class Run < ActiveRecord::Base
 
+  RUNNING = 1
+  DONE = 2
+
   belongs_to :job
   has_many :useragent_runs, :dependent => :destroy
   has_many :client_runs, :dependent => :destroy
@@ -11,6 +14,28 @@ class Run < ActiveRecord::Base
   validates :browsers, :presence => true
 
   before_create :setup_useragent_runs
+
+  def running?
+    status == RUNNING
+  end
+
+  def done?
+    status == DONE
+  end
+
+  def run_started
+    return false if done? || running?
+    update_attribute(:status, RUNNING)
+    job.run_started
+  end
+
+  def run_completed
+    return false unless running?
+    if useragent_runs.all?(&:done?)
+      update_attribute(:status, DONE)
+      job.run_completed
+    end
+  end
 
   private
 

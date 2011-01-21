@@ -108,6 +108,44 @@ describe Job do
     end
   end
 
+  describe "run_started" do
+    it "should update status to RUNNING" do
+      job = create_job
+      job.run_started
+      job.status.should == Job::RUNNING
+    end
+
+    it "should not update if done?" do
+      job = create_job(:status => Job::DONE)
+      job.run_started.should be_false
+      job.status.should == Job::DONE
+    end
+
+    it "should not update if running?" do
+      job = create_job(:status => Job::RUNNING)
+      job.run_started.should be_false
+    end
+  end
+
+  describe "run_completed" do
+    it "should update status to DONE" do
+      job = create_job(:status => Job::RUNNING)
+      job.run_completed
+      job.status.should == Job::DONE
+    end
+
+    it "should not update if new" do
+      job = create_job
+      job.run_completed.should be_false
+      job.status.should be_nil
+    end
+
+    it "should not update if done?" do
+      job = create_job(:status => Job::DONE)
+      job.run_completed.should be_false
+    end
+  end
+
   it "should setup runs" do
     j = build_job(:browsers => 'popular', :suites => { 'One' => 'http://google.com', 'Two' => 'http://yahoo.com' })
     j.send :setup_runs
