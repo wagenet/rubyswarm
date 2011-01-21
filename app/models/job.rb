@@ -19,6 +19,9 @@ class Job < ActiveRecord::Base
   validates :browsers, :presence => true
   validates :suites,   :presence => true
 
+  scope :running, where(:status => RUNNING)
+  scope :done, where(:status => DONE)
+
   before_create :setup_runs, :set_test_creation_date
 
   def running?

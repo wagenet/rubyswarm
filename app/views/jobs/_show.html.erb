@@ -34,13 +34,21 @@
 <% end %>
 </table>
 
+<%
+  # TODO: Convert this to SQL
+  client_runs = job.client_runs.includes(:client).select{|cr| cr.done? || cr.failed? }.group_by{|cr| cr.client.useragent_id }.values
+  fails = (client_runs.flatten.sum(&:fail) / client_runs.count.to_f).round
+  errors = (client_runs.flatten.sum(&:error) / client_runs.count.to_f).round
+  total = (client_runs.flatten.sum(&:total) / client_runs.count.to_f).round
+%>
+
 <p>
-  <b>Fail:</b>
-  <%= job.fails %>
-  <b>Error:</b>
-  <%= job.errors %>
-  <b>Total:</b>
-  <%= job.total %>
+  <b>AVERAGES:</b><br />
+  <b>Fail:</b> <%= fails %><br />
+  <b>Error:</b> <%= errors %><br />
+  <b>Total:</b> <%= total %><br />
+  <b>Pass %:</b>
+  <%= (((total - fails - errors) / total.to_f) * 10000).round / 100.0 %>%
 </p>
 
 <script type="text/javascript">

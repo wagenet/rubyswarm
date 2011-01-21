@@ -13,6 +13,9 @@ class Run < ActiveRecord::Base
   validates :url,      :presence => true
   validates :browsers, :presence => true
 
+  scope :running, where(:status => RUNNING)
+  scope :done, where(:status => DONE)
+
   before_create :setup_useragent_runs
 
   def running?
