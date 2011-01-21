@@ -20,9 +20,14 @@ class JobsController < ApplicationController
   # GET /jobs/1.xml
   def show
     respond_to do |format|
-      format.html # show.html.erb
+      format.html do
+        if request.xhr?
+          render :partial => 'show', :locals => { :job => @job }
+        else
+          render 'show'
+        end
+      end
       format.xml  { render :xml => @job }
-      format.js   { render :partial => 'show', :locals => { :job => @job } }
     end
   end
 
