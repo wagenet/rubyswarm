@@ -53,18 +53,6 @@ class Job < ActiveRecord::Base
     end
   end
 
-  def fails
-    client_runs.sum(:fail)
-  end
-
-  def errors
-    client_runs.sum(:error)
-  end
-
-  def total
-    client_runs.sum(:total)
-  end
-
   def run_started
     return false if done? || running?
     update_attribute(:status, RUNNING)
