@@ -4,6 +4,7 @@ db/*.sqlite3
 log/*.log
 tmp/**/*
 coverage
+config/initializers/secret_token.rb
 public/sc_tests
 public/sproutcore
 sc_tests
