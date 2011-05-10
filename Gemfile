@@ -1,9 +1,9 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.3'
+gem 'rails', '~> 3.0.3'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
-gem 'jquery-rails', '>= 0.2.6'
+gem 'jquery-rails', '~> 0.2.6'
 
 gem 'devise'
 gem 'cancan'
@@ -18,7 +18,7 @@ group :development, :test do
   gem 'autotest-fsevent'
   gem 'autotest-growl'
   gem 'rspec-rails'
-  gem 'capybara', '~> 0.4.0', :git => 'git://github.com/jnicklas/capybara.git', :require => false
+  gem 'capybara', '1.0.0.beta1', :require => false
 end
 
 group :test do
